@@ -9,29 +9,20 @@ import { AiFillDelete } from 'react-icons/ai';
 const App: React.FC = () => {
   const [todo, setTodo] = useState<string>("");
   const [todoLists, setTodoLists] = useState<Todo[]>([]);
-
-
-  useEffect(() => {
-    localStorage.setItem('todoLists', JSON.stringify(todoLists))
-  }, [todoLists])
-
-
-  // useEffect(() => {
-  //   const getTodoLists = JSON.parse(localStorage.getItem('todoLists') || '{}')
-  //   if (getTodoLists) {
-  //     setTodoLists(getTodoLists)
-  //   }
-  // }, [])
-
   const addHandle = (e: React.FormEvent) => {
     e.preventDefault();
     if (todo) {
       setTodoLists([...todoLists, { id: Date.now(), todo, isDone: false }]);
-
+      localStorage.setItem('todoList', JSON.stringify([...todoLists, { id: Date.now(), todo, isDone: false }]))
       setTodo('')
-
     }
   }
+  useEffect(() => {
+    const getItem: any = localStorage.getItem('todoList');
+    if (getItem) {
+      setTodoLists(JSON.parse(getItem))
+    }
+  }, [])
   const handleDone = (id: number) => {
     setTodoLists(
       todoLists.map(todoList => todoList.id === id ? { ...todoList, isDone: !todoList.isDone } : todoList)
